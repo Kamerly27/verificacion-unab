@@ -113,7 +113,7 @@ def init_db():
         ))
 
     # --------------------------------------------------------
-    # ÍNDICE ÚNICO
+    # ÍNDICE ÚNICO PARA LOS CÓDIGOS
     # --------------------------------------------------------
 
     conn.execute("""
@@ -128,13 +128,13 @@ def init_db():
 
 
 # ============================================================
-# GENERACIÓN DEL QR CON LOGO UNAB
+# GENERACIÓN DEL QR CON LOGO UNAB ARRIBA
 # ============================================================
 
 def qr_data_uri(texto):
 
     # --------------------------------------------------------
-    # CREAR QR CON ALTA CORRECCIÓN DE ERRORES
+    # CREAR QR
     # --------------------------------------------------------
 
     qr = qrcode.QRCode(
@@ -153,7 +153,7 @@ def qr_data_uri(texto):
     imagen_qr = qr.make_image(
         fill_color="black",
         back_color="white"
-    ).convert("RGBA")
+    ).convert("RGB")
 
     # --------------------------------------------------------
     # BUSCAR LOGO UNAB
@@ -166,6 +166,10 @@ def qr_data_uri(texto):
         / "unab-logo.png"
     )
 
+    # --------------------------------------------------------
+    # COLOCAR LOGO ARRIBA DEL QR
+    # --------------------------------------------------------
+
     if logo_path.exists():
 
         logo = Image.open(
@@ -173,101 +177,128 @@ def qr_data_uri(texto):
         ).convert("RGBA")
 
         # ----------------------------------------------------
-        # REDIMENSIONAR LOGO
+        # TAMAÑO DEL LOGO
         # ----------------------------------------------------
 
-        ancho_maximo = int(
-            imagen_qr.width * 0.28
+        ancho_logo = int(
+            imagen_qr.width * 0.55
         )
 
-        relacion = (
-            ancho_maximo
+        proporcion = (
+            ancho_logo
             / logo.width
         )
 
-        nuevo_alto = int(
+        alto_logo = int(
             logo.height
-            * relacion
+            * proporcion
         )
 
         logo = logo.resize(
             (
-                ancho_maximo,
-                nuevo_alto
+                ancho_logo,
+                alto_logo
             ),
             Image.LANCZOS
         )
 
         # ----------------------------------------------------
-        # CREAR FONDO BLANCO PARA EL LOGO
+        # ESPACIOS DEL DISEÑO
         # ----------------------------------------------------
 
-        margen = 18
+        margen_superior = 30
+        margen_inferior = 25
+        margen_lateral = 35
+        margen_final = 30
 
-        caja_ancho = (
-            logo.width
-            + margen * 2
+        # ----------------------------------------------------
+        # TAMAÑO DEL LIENZO FINAL
+        # ----------------------------------------------------
+
+        ancho_final = max(
+            imagen_qr.width,
+            logo.width + (
+                margen_lateral * 2
+            )
         )
 
-        caja_alto = (
-            logo.height
-            + margen * 2
+        alto_final = (
+            margen_superior
+            + logo.height
+            + margen_inferior
+            + imagen_qr.height
+            + margen_final
         )
 
-        caja = Image.new(
-            "RGBA",
+        # ----------------------------------------------------
+        # CREAR FONDO BLANCO
+        # ----------------------------------------------------
+
+        lienzo = Image.new(
+            "RGB",
             (
-                caja_ancho,
-                caja_alto
+                ancho_final,
+                alto_final
             ),
             "white"
         )
 
         # ----------------------------------------------------
-        # COLOCAR LOGO SOBRE FONDO BLANCO
+        # CENTRAR LOGO
         # ----------------------------------------------------
 
-        caja.alpha_composite(
+        x_logo = (
+            ancho_final
+            - logo.width
+        ) // 2
+
+        lienzo.paste(
             logo,
             (
-                margen,
-                margen
-            )
+                x_logo,
+                margen_superior
+            ),
+            logo
         )
 
         # ----------------------------------------------------
-        # CALCULAR CENTRO DEL QR
+        # COLOCAR QR DEBAJO DEL LOGO
         # ----------------------------------------------------
 
-        x = (
-            imagen_qr.width
-            - caja.width
+        x_qr = (
+            ancho_final
+            - imagen_qr.width
         ) // 2
 
-        y = (
-            imagen_qr.height
-            - caja.height
-        ) // 2
+        y_qr = (
+            margen_superior
+            + logo.height
+            + margen_inferior
+        )
 
-        # ----------------------------------------------------
-        # COLOCAR LOGO EN EL CENTRO DEL QR
-        # ----------------------------------------------------
-
-        imagen_qr.alpha_composite(
-            caja,
+        lienzo.paste(
+            imagen_qr,
             (
-                x,
-                y
+                x_qr,
+                y_qr
             )
         )
+
+        imagen_final = lienzo
+
+    else:
+
+        # Si por alguna razón no existe el logo,
+        # generar QR normal.
+        imagen_final = imagen_qr
 
     # --------------------------------------------------------
-    # CONVERTIR QR A BASE64
+    # CONVERTIR A BASE64
     # --------------------------------------------------------
 
     buffer = BytesIO()
 
-    imagen_qr.save(
+    imagen_final.save(
         buffer,
         format="PNG"
     )
@@ -571,7 +602,7 @@ def registro():
         conn.close()
 
         # ----------------------------------------------------
-        # IR A PANTALLA DEL QR
+        # IR A LA PANTALLA DEL QR
         # ----------------------------------------------------
 
         return redirect(
@@ -654,7 +685,7 @@ def registro_qr(
     )
 
     # --------------------------------------------------------
-    # CREAR QR CON LOGO UNAB
+    # CREAR QR CON LOGO ARRIBA
     # --------------------------------------------------------
 
     qr = qr_data_uri(
