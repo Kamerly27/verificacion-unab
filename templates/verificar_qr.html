@@ -1,127 +1,370 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificación académica</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-        }
+<title>Consulta de validación de títulos académicos</title>
 
-        header {
-            background: #333;
-            color: white;
-            padding: 28px 8%;
-            display: flex;
-            justify-content: space-between;
-            font-size: 20px;
-        }
+<style>
+*{
+    box-sizing:border-box;
+}
 
-        .contenedor {
-            max-width: 850px;
-            margin: 50px auto;
-            background: white;
-            padding: 40px;
-            box-shadow: 0 2px 10px #ccc;
-        }
+html,body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#e9e9e9;
+    color:#111;
+}
 
-        h1 {
-            color: #e97824;
-        }
+body{
+    background:
+        linear-gradient(rgba(255,255,255,.78),rgba(255,255,255,.78)),
+        url("{{ url_for('static', filename='img/fondo-unab.jpg') }}")
+        center top / cover fixed no-repeat;
+}
 
-        .verificado {
-            border: 2px solid #4caf50;
-            padding: 18px;
-            margin-bottom: 30px;
-            font-weight: bold;
-            color: #287a2d;
-        }
+/* ENCABEZADO */
+.encabezado{
+    height:105px;
+    background:#333;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 5%;
+}
 
-        .dato {
-            border-bottom: 1px solid #ddd;
-            padding: 12px 0;
-            font-size: 17px;
-        }
+.encabezado .titulo{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:23px;
+}
 
-        .dato strong {
-            display: inline-block;
-            width: 230px;
-        }
-    </style>
+.encabezado .marca{
+    font-size:28px;
+    font-weight:bold;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.principal{
+    width:82%;
+    max-width:1380px;
+    margin:8px auto 0;
+}
+
+/* PANEL CONSULTA */
+.panel{
+    background:rgba(255,255,255,.91);
+    border-radius:4px;
+    padding:30px 14px 16px;
+    box-shadow:0 2px 7px rgba(0,0,0,.20);
+}
+
+h1{
+    margin:0 0 24px;
+    color:#f28b00;
+    font-size:27px;
+    font-weight:normal;
+}
+
+.autorizacion{
+    border:1px dashed #cfcfcf;
+    padding:14px 10px;
+    margin-bottom:32px;
+    font-size:14px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.check{
+    background:#f28b00;
+    color:white;
+    font-size:20px;
+    width:25px;
+    height:25px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* FORMULARIO */
+.formulario{
+    width:88%;
+    margin:auto;
+    background:white;
+    border:1px solid #d6d6d6;
+    border-radius:5px;
+    padding:28px 28px 18px;
+    box-shadow:0 1px 4px rgba(0,0,0,.18);
+}
+
+.formulario h2{
+    text-align:center;
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:25px;
+    font-weight:normal;
+    margin:0 0 25px;
+}
+
+.campos{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:28px;
+}
+
+.campo label{
+    display:block;
+    text-align:center;
+    margin-bottom:7px;
+    font-size:14px;
+}
+
+.campo input{
+    width:100%;
+    height:37px;
+    border:1px solid #c7c7c7;
+    border-radius:4px;
+    padding:7px 10px;
+    font-size:14px;
+}
+
+.botones{
+    text-align:center;
+    margin-top:20px;
+}
+
+.boton{
+    display:inline-block;
+    background:#f28b00;
+    color:white;
+    padding:10px 18px;
+    margin:0 4px;
+    border-radius:4px;
+    font-weight:bold;
+}
+
+/* RESULTADO */
+.resultado{
+    background:#fffef2;
+    margin:0 6px;
+    padding:26px 7% 14px;
+    box-shadow:0 1px 5px rgba(0,0,0,.15);
+}
+
+.resultado h2{
+    text-align:center;
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:22px;
+    font-weight:normal;
+    margin:0 0 24px;
+}
+
+.resultado h2 strong{
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.tabla{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    text-align:center;
+}
+
+.tabla th{
+    color:#f28b00;
+    font-weight:normal;
+    padding:9px;
+    border:1px solid #eee;
+}
+
+.tabla td{
+    padding:9px;
+    border:1px solid #eee;
+}
+
+.consultado{
+    text-align:right;
+    font-size:12px;
+    margin-top:22px;
+}
+
+.mensaje{
+    margin:25px auto;
+    width:88%;
+    padding:18px;
+    background:#fff;
+    border:1px solid #ddd;
+}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+
+    .encabezado{
+        height:auto;
+        padding:18px 5%;
+        gap:15px;
+    }
+
+    .encabezado .titulo{
+        font-size:17px;
+    }
+
+    .encabezado .marca{
+        font-size:22px;
+    }
+
+    .principal{
+        width:95%;
+    }
+
+    .campos{
+        grid-template-columns:1fr;
+    }
+
+    .formulario{
+        width:100%;
+    }
+
+    .resultado{
+        margin:0;
+        padding:22px 10px;
+        overflow-x:auto;
+    }
+
+    .tabla{
+        min-width:650px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<header>
-    <div>Registro y verificación académica</div>
-    <div>Proyecto académico</div>
+<header class="encabezado">
+    <div class="titulo">
+        Registro académico
+    </div>
+
+    <div class="marca">
+        Consulta académica
+    </div>
 </header>
 
-<div class="contenedor">
+<main class="principal">
+
+    <section class="panel">
+
+        <h1>
+            Consulta de validación de títulos académicos
+        </h1>
+
+        <div class="autorizacion">
+            <span>
+                Declaro bajo la gravedad de juramento que cuento con autorización
+                otorgada por el graduado para realizar el proceso de consulta
+                de validación de títulos.
+            </span>
+
+            <span class="check">✓</span>
+        </div>
+
+        <div class="formulario">
+
+            <h2>
+                Datos del Graduado a Consultar
+            </h2>
+
+            {% if graduado %}
+
+            <div class="campos">
+
+                <div class="campo">
+                    <label>Tipo de identificación:</label>
+                    <input value="{{ graduado['tipo_documento'] }}" readonly>
+                </div>
+
+                <div class="campo">
+                    <label>Número de identificación:</label>
+                    <input value="{{ graduado['documento'] }}" readonly>
+                </div>
+
+                <div class="campo">
+                    <label>Programa cursado:</label>
+                    <input value="{{ graduado['programa'] }}" readonly>
+                </div>
+
+                <div class="campo">
+                    <label>Fecha de graduación:</label>
+                    <input value="{{ graduado['fecha_graduacion'] }}" readonly>
+                </div>
+
+            </div>
+
+            <div class="botones">
+                <span class="boton">⌕ Nueva consulta</span>
+                <span class="boton">× Salir</span>
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
 
     {% if graduado %}
 
-        <h1>Verificación académica</h1>
+    <section class="resultado">
 
-        <div class="verificado">
-            ✓ Registro encontrado y código de verificación válido
+        <h2>
+            <strong>Nombre:</strong>
+            {{ graduado['nombre'] }}
+            &nbsp;–&nbsp;
+            <strong>Identificación:</strong>
+            {{ graduado['tipo_documento'] }}
+            – {{ graduado['documento'] }}
+        </h2>
+
+        <table class="tabla">
+            <thead>
+                <tr>
+                    <th>Número de acta</th>
+                    <th>Fecha de grado</th>
+                    <th>Programa</th>
+                    <th>Registro</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>{{ graduado['numero_acta'] }}</td>
+                    <td>{{ graduado['fecha_graduacion'] }}</td>
+                    <td>{{ graduado['programa'] }}</td>
+                    <td>{{ graduado['numero_diploma'] }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="consultado">
+            Consulta realizada mediante código de verificación.
         </div>
 
-        <div class="dato">
-            <strong>Nombre completo:</strong>
-            {{ graduado["nombre"] }}
-        </div>
-
-        <div class="dato">
-            <strong>Tipo de documento:</strong>
-            {{ graduado["tipo_documento"] }}
-        </div>
-
-        <div class="dato">
-            <strong>Número de documento:</strong>
-            {{ graduado["documento"] }}
-        </div>
-
-        <div class="dato">
-            <strong>Programa académico:</strong>
-            {{ graduado["programa"] }}
-        </div>
-
-        <div class="dato">
-            <strong>Fecha de graduación:</strong>
-            {{ graduado["fecha_graduacion"] }}
-        </div>
-
-        <div class="dato">
-            <strong>Número de diploma:</strong>
-            {{ graduado["numero_diploma"] }}
-        </div>
-
-        <div class="dato">
-            <strong>Número de acta de grado:</strong>
-            {{ graduado["numero_acta"] }}
-        </div>
-
-        <div class="dato">
-            <strong>Código de verificación:</strong>
-            {{ graduado["codigo_verificacion"] }}
-        </div>
+    </section>
 
     {% else %}
 
-        <h1>Registro no encontrado</h1>
-
-        <p>
-            No existe un registro asociado al código de verificación consultado.
-        </p>
+    <section class="mensaje">
+        <h2>Registro no encontrado</h2>
+        <p>No existe un registro asociado al código consultado.</p>
+    </section>
 
     {% endif %}
 
-</div>
+</main>
 
 </body>
 </html>
