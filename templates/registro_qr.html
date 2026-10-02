@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro académico</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 28px 8%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+        }
+
+        .contenedor {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 35px;
+            box-shadow: 0 2px 10px #ccc;
+        }
+
+        h1 {
+            color: #e97824;
+        }
+
+        .datos {
+            line-height: 1.9;
+            font-size: 17px;
+        }
+
+        .qr {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .qr img {
+            width: 260px;
+            height: 260px;
+        }
+
+        .codigo {
+            background: #f2f2f2;
+            padding: 12px;
+            word-break: break-all;
+        }
+
+        .boton {
+            display: inline-block;
+            background: #e97824;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div>Registro y verificación académica</div>
+    <div>Proyecto académico</div>
+</header>
+
+<div class="contenedor">
+
+    <h1>Registro realizado correctamente</h1>
+
+    <div class="datos">
+
+        <p><strong>Nombre completo:</strong>
+            {{ graduado["nombre"] }}
+        </p>
+
+        <p><strong>Tipo de documento:</strong>
+            {{ graduado["tipo_documento"] }}
+        </p>
+
+        <p><strong>Número de documento:</strong>
+            {{ graduado["documento"] }}
+        </p>
+
+        <p><strong>Programa académico:</strong>
+            {{ graduado["programa"] }}
+        </p>
+
+        <p><strong>Fecha de graduación:</strong>
+            {{ graduado["fecha_graduacion"] }}
+        </p>
+
+        <p><strong>Número de diploma:</strong>
+            {{ graduado["numero_diploma"] }}
+        </p>
+
+        <p><strong>Número de acta de grado:</strong>
+            {{ graduado["numero_acta"] }}
+        </p>
+
+    </div>
+
+    <div class="qr">
+        <h2>Código QR de verificación</h2>
+
+        <img src="{{ qr }}" alt="Código QR">
+
+        <p>Escanee el código QR para consultar el registro.</p>
+    </div>
+
+    <p><strong>Código de verificación:</strong></p>
+
+    <div class="codigo">
+        {{ graduado["codigo_verificacion"] }}
+    </div>
+
+    <p>
+        <strong>Dirección de verificación:</strong>
+    </p>
+
+    <div class="codigo">
+        {{ verification_url }}
+    </div>
+
+    <a class="boton"
+       href="{{ url_for('lista_registros') }}">
+        Ver registros
+    </a>
+
+</div>
+
+</body>
+</html>

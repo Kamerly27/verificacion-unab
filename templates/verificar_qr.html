@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación académica</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 28px 8%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+        }
+
+        .contenedor {
+            max-width: 850px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px #ccc;
+        }
+
+        h1 {
+            color: #e97824;
+        }
+
+        .verificado {
+            border: 2px solid #4caf50;
+            padding: 18px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #287a2d;
+        }
+
+        .dato {
+            border-bottom: 1px solid #ddd;
+            padding: 12px 0;
+            font-size: 17px;
+        }
+
+        .dato strong {
+            display: inline-block;
+            width: 230px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div>Registro y verificación académica</div>
+    <div>Proyecto académico</div>
+</header>
+
+<div class="contenedor">
+
+    {% if graduado %}
+
+        <h1>Verificación académica</h1>
+
+        <div class="verificado">
+            ✓ Registro encontrado y código de verificación válido
+        </div>
+
+        <div class="dato">
+            <strong>Nombre completo:</strong>
+            {{ graduado["nombre"] }}
+        </div>
+
+        <div class="dato">
+            <strong>Tipo de documento:</strong>
+            {{ graduado["tipo_documento"] }}
+        </div>
+
+        <div class="dato">
+            <strong>Número de documento:</strong>
+            {{ graduado["documento"] }}
+        </div>
+
+        <div class="dato">
+            <strong>Programa académico:</strong>
+            {{ graduado["programa"] }}
+        </div>
+
+        <div class="dato">
+            <strong>Fecha de graduación:</strong>
+            {{ graduado["fecha_graduacion"] }}
+        </div>
+
+        <div class="dato">
+            <strong>Número de diploma:</strong>
+            {{ graduado["numero_diploma"] }}
+        </div>
+
+        <div class="dato">
+            <strong>Número de acta de grado:</strong>
+            {{ graduado["numero_acta"] }}
+        </div>
+
+        <div class="dato">
+            <strong>Código de verificación:</strong>
+            {{ graduado["codigo_verificacion"] }}
+        </div>
+
+    {% else %}
+
+        <h1>Registro no encontrado</h1>
+
+        <p>
+            No existe un registro asociado al código de verificación consultado.
+        </p>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Registros académicos</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body class="registro-body">
+<header class="topbar"><div>Registros académicos</div><div class="topbar-brand">Proyecto académico</div></header>
+<main class="registro-wrap">
+<section class="registro-card wide">
+<h1>Registros</h1>
+<table class="records">
+<thead><tr><th>Documento</th><th>Nombre</th><th>Programa</th><th>Graduación</th><th>QR</th></tr></thead>
+<tbody>
+{% for r in registros %}
+<tr>
+<td>{{ r["documento"] }}</td><td>{{ r["nombre"] }}</td><td>{{ r["programa"] }}</td><td>{{ r["fecha_graduacion"] }}</td>
+<td><a class="link-orange" href="{{ url_for('registro_qr', graduado_id=r['id']) }}">Ver QR</a></td>
+</tr>
+{% else %}
+<tr><td colspan="5">No hay registros todavía.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+<p><a class="btn-light" href="{{ url_for('registro') }}">Nuevo registro</a></p>
+</section>
+</main>
+</body>
+</html>
